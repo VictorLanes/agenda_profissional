@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda de Beleza</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --plum: #4A2439;
+  --plum-dark: #341828;
+  --blush: #F1D4DE;
+  --blush-light: #FBF1F4;
+  --ivory: #FBF6F4;
+  --gold: #C9A15A;
+  --charcoal: #2E2024;
+  --charcoal-soft: #6B5A61;
+  --ok: #6B8F71;
+  --warn: #C98A2E;
+  --danger: #B85C5C;
+  --line: #E6D9DD;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(74, 36, 57, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-family: 'Work Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--plum);
+  margin: 0;
+}
+
+a { color: inherit; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.oculto { display: none !important; }
+
+/* ---------- Topo ---------- */
+
+.topo {
+  background: linear-gradient(135deg, var(--plum) 0%, var(--plum-dark) 100%);
+  color: var(--blush-light);
+  padding: 36px 0 46px;
+  position: relative;
+  overflow: hidden;
+}
+
+.topo::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  top: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,161,90,0.35) 0%, rgba(201,161,90,0) 70%);
+}
+
+.topo-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.topo h1 {
+  color: #fff;
+  font-size: 34px;
+  margin-top: 6px;
+}
+
+.topo p {
+  color: var(--blush);
+  margin-top: 8px;
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+.topo-link {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 12.5px;
+  color: var(--blush);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+.topo-link:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ---------- Cartão / bloco ---------- */
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  padding: 28px;
+}
+
+.secao-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.secao-titulo .numero {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: 15px;
+}
+
+/* ---------- Swatches de serviço ---------- */
+
+.servicos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.servico-swatch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: var(--blush-light);
+  text-align: left;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.servico-swatch:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.servico-swatch.selecionado {
+  border-color: var(--gold);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(201,161,90,0.18);
+}
+
+.swatch-bolha {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.servico-info strong {
+  display: block;
+  font-size: 14.5px;
+  color: var(--charcoal);
+}
+
+.servico-info span {
+  font-size: 12.5px;
+  color: var(--charcoal-soft);
+}
+
+/* ---------- Formulário ---------- */
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: 6px;
+}
+
+.campo { margin-bottom: 18px; }
+
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font-size: 14.5px;
+  background: var(--blush-light);
+  color: var(--charcoal);
+  font-family: inherit;
+}
+
+textarea { resize: vertical; min-height: 70px; }
+
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+}
+
+.horario-chip {
+  padding: 10px 6px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--blush-light);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.horario-chip.selecionado {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: #fff;
+}
+
+.btn-primario {
+  background: var(--plum);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  transition: background 0.15s ease;
+}
+
+.btn-primario:hover { background: var(--plum-dark); }
+.btn-primario:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secundario {
+  background: transparent;
+  color: var(--plum);
+  border: 1.5px solid var(--plum);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.msg {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+}
+
+.msg.sucesso { background: #E9F1E9; color: var(--ok); }
+.msg.erro { background: #F6E6E6; color: var(--danger); }
+
+/* ---------- Agenda (painel da profissional) ---------- */
+
+.agenda-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.filtros { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.resumo-dia { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+
+.resumo-item {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 18px;
+  min-width: 120px;
+}
+
+.resumo-item .valor-grande { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--plum); }
+.resumo-item .rotulo { font-size: 12px; color: var(--charcoal-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.lista-agendamentos { display: flex; flex-direction: column; gap: 10px; }
+
+.item-agendamento {
+  display: grid;
+  grid-template-columns: 6px 70px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.item-agendamento:hover { box-shadow: var(--shadow); }
+
+.item-tarja { align-self: stretch; border-radius: 4px; }
+.item-horario { font-weight: 700; color: var(--plum); font-size: 15px; }
+.item-principal strong { display: block; font-size: 15px; }
+.item-principal span { font-size: 13px; color: var(--charcoal-soft); }
+
+.status-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.status-Pendente { background: #FBECD6; color: var(--warn); }
+.status-Confirmado { background: #E4EEE5; color: var(--ok); }
+.status-Cancelado { background: #F6E6E6; color: var(--danger); }
+.status-Concluído { background: #E6E1F0; color: var(--plum); }
+
+/* ---------- Modal de detalhes ---------- */
+
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 32, 36, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal-caixa {
+  background: #fff;
+  border-radius: var(--radius);
+  max-width: 420px;
+  width: 100%;
+  padding: 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-linha {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  gap: 12px;
+}
+
+.modal-linha span:first-child { color: var(--charcoal-soft); flex-shrink: 0; }
+.modal-linha span:last-child { font-weight: 600; text-align: right; }
+
+.modal-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+.btn-whatsapp {
+  background: #6B8F71;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1 1 100%;
+  text-decoration: none;
+}
+
+.btn-status {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1.5px solid var(--line);
+  background: var(--blush-light);
+}
+
+.btn-status.ativo { border-color: var(--plum); color: var(--plum); }
+
+.btn-excluir {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fechar-modal {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: transparent;
+  font-size: 20px;
+  color: var(--charcoal-soft);
+}
+
+/* ---------- PIN / login ---------- */
+
+.tela-pin { max-width: 340px; margin: 80px auto; text-align: center; padding: 0 20px; }
+
+.vazio { text-align: center; padding: 40px 20px; color: var(--charcoal-soft); }
+.vazio .display { font-size: 20px; margin-bottom: 6px; }
+
+@media (max-width: 560px) {
+  .item-agendamento {
+    grid-template-columns: 6px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .item-horario { grid-column: 2; }
+  .status-badge { grid-column: 2; justify-self: start; margin-top: 4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========================= TELA 1: AGENDAMENTO DA CLIENTE ========================= -->
+<div id="telaCliente">
+  <div class="topo">
+    <div class="container">
+      <a href="#agenda" class="topo-link">Sou a profissional</a>
+      <div class="topo-eyebrow">Agendamento online</div>
+      <h1>Marque seu horário</h1>
+      <p>Escolha o procedimento, o dia e o horário disponível. Você recebe a confirmação diretamente pelo WhatsApp.</p>
+    </div>
+  </div>
+
+  <div class="container" style="margin-top: -26px; padding-bottom: 60px;">
+
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="secao-titulo">
+        <span class="numero">um</span>
+        <h2 style="font-size:17px;">Escolha o procedimento</h2>
+      </div>
+      <div id="servicosGrid" class="servicos-grid">
+        <p style="color:#6B5A61; font-size:13.5px;">Carregando procedimentos...</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="secao-titulo">
+        <span class="numero">dois</span>
+        <h2 style="font-size:17px;">Escolha o dia e o horário</h2>
+      </div>
+      <div class="campo">
+        <label for="inputData">Dia</label>
+        <input type="date" id="inputData">
+      </div>
+      <div id="horariosContainer">
+        <p style="color:#6B5A61; font-size:13.5px;">Selecione um procedimento e um dia para ver os horários livres.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="secao-titulo">
+        <span class="numero">três</span>
+        <h2 style="font-size:17px;">Seus dados</h2>
+      </div>
+
+      <div class="campo">
+        <label for="inputNome">Nome completo</label>
+        <input type="text" id="inputNome" placeholder="Seu nome">
+      </div>
+      <div class="campo">
+        <label for="inputTelefone">WhatsApp</label>
+        <input type="tel" id="inputTelefone" placeholder="(21) 90000-0000">
+      </div>
+      <div class="campo">
+        <label for="inputObs">Observações (opcional)</label>
+        <textarea id="inputObs" placeholder="Alguma preferência ou detalhe importante?"></textarea>
+      </div>
+
+      <button class="btn-primario" id="btnConfirmar" disabled>Confirmar agendamento</button>
+      <div id="mensagem"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================= TELA 2: PAINEL DA PROFISSIONAL ========================= -->
+<div id="telaProfissional" class="oculto">
+
+  <div id="telaPin" class="tela-pin">
+    <h1 style="font-size:24px; margin-bottom: 6px;">Minha Agenda</h1>
+    <p style="color:#6B5A61; font-size:13.5px; margin-bottom: 20px;">Digite seu PIN de acesso</p>
+    <input type="text" id="inputPin" inputmode="numeric" placeholder="PIN" style="text-align:center; letter-spacing: 0.3em; font-size:18px; margin-bottom: 12px;">
+    <button class="btn-primario" id="btnEntrar">Entrar</button>
+    <div id="mensagemPin"></div>
+    <p style="margin-top:18px;"><a href="#" id="linkVoltarCliente" style="font-size:12.5px; color:#6B5A61;">&larr; Voltar para a página de agendamento</a></p>
+  </div>
+
+  <div id="painel" class="oculto">
+    <div class="topo">
+      <div class="container">
+        <a href="#" id="linkVoltarCliente2" class="topo-link">Ver como cliente</a>
+        <div class="topo-eyebrow">Painel da profissional</div>
+        <h1>Minha Agenda</h1>
+        <p>Acompanhe, confirme e organize os atendimentos marcados pelas clientes.</p>
+      </div>
+    </div>
+
+    <div class="container" style="margin-top: -26px; padding-bottom: 60px;">
+      <div class="card">
+        <div class="agenda-topbar">
+          <div class="campo" style="margin-bottom:0;">
+            <label for="filtroData">Ver o dia</label>
+            <input type="date" id="filtroData">
+          </div>
+          <div class="filtros">
+            <button class="btn-secundario" data-filtro="Todos">Todos</button>
+            <button class="btn-secundario" data-filtro="Pendente">Pendentes</button>
+            <button class="btn-secundario" data-filtro="Confirmado">Confirmados</button>
+          </div>
+        </div>
+
+        <div class="resumo-dia" id="resumoDia"></div>
+        <div id="listaAgendamentos" class="lista-agendamentos"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de detalhes (painel da profissional) -->
+<div id="modalFundo" class="modal-fundo oculto">
+  <div class="modal-caixa">
+    <button class="fechar-modal" id="btnFecharModal">&times;</button>
+    <h3 style="font-size:19px; margin-bottom: 14px;">Detalhes do agendamento</h3>
+    <div id="modalConteudo"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ⚠️ COLE AQUI a URL do seu App da Web publicado no Google Apps Script
+// ============================================================
+const API_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+
+async function chamarApi(action, params = {}) {
+  const body = JSON.stringify({ action, ...params });
+  const resp = await fetch(API_URL, { method: 'POST', body });
+  return resp.json();
+}
+
+// ------------------------------------------------------------
+// ROTEAMENTO: mostra tela de cliente ou tela da profissional
+// conforme o hash da URL (#agenda)
+// ------------------------------------------------------------
+
+const telaCliente = document.getElementById('telaCliente');
+const telaProfissional = document.getElementById('telaProfissional');
+
+function roteirizar() {
+  if (window.location.hash === '#agenda') {
+    telaCliente.classList.add('oculto');
+    telaProfissional.classList.remove('oculto');
+    if (!agendaIniciada) iniciarAgenda();
+  } else {
+    telaProfissional.classList.add('oculto');
+    telaCliente.classList.remove('oculto');
+    if (!clienteIniciado) iniciarCliente();
+  }
+}
+window.addEventListener('hashchange', roteirizar);
+
+document.getElementById('linkVoltarCliente').addEventListener('click', e => {
+  e.preventDefault();
+  window.location.hash = '';
+});
+document.getElementById('linkVoltarCliente2').addEventListener('click', e => {
+  e.preventDefault();
+  window.location.hash = '';
+});
+
+let clienteIniciado = false;
+let agendaIniciada = false;
+
+// ============================================================
+// TELA DA CLIENTE
+// ============================================================
+
+let servicos = [];
+let servicoSelecionado = null;
+let horarioSelecionado = null;
+
+const servicosGrid = document.getElementById('servicosGrid');
+const inputData = document.getElementById('inputData');
+const horariosContainer = document.getElementById('horariosContainer');
+const btnConfirmar = document.getElementById('btnConfirmar');
+const mensagemDiv = document.getElementById('mensagem');
+
+function iniciarCliente() {
+  clienteIniciado = true;
+  const hoje = new Date().toISOString().split('T')[0];
+  inputData.min = hoje;
+  carregarServicos();
+}
+
+async function carregarServicos() {
+  try {
+    const resp = await chamarApi('getServicos');
+    if (!resp.ok) throw new Error(resp.erro || 'Erro ao carregar procedimentos.');
+    servicos = resp.servicos;
+    renderizarServicos();
+  } catch (err) {
+    servicosGrid.innerHTML = `<p style="color:#B85C5C; font-size:13.5px;">Não foi possível carregar os procedimentos. Verifique a conexão da página com a planilha.</p>`;
+  }
+}
+
+function renderizarServicos() {
+  servicosGrid.innerHTML = '';
+  servicos.forEach((s, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'servico-swatch';
+    btn.innerHTML = `
+      <span class="swatch-bolha" style="background:${s.cor}"></span>
+      <span class="servico-info">
+        <strong>${s.nome}</strong>
+        <span>R$ ${Number(s.valor).toFixed(2)} · ${s.duracaoMin} min</span>
+      </span>
+    `;
+    btn.addEventListener('click', () => selecionarServico(index));
+    servicosGrid.appendChild(btn);
+  });
+}
+
+function selecionarServico(index) {
+  servicoSelecionado = servicos[index];
+  document.querySelectorAll('#servicosGrid .servico-swatch').forEach((el, i) => {
+    el.classList.toggle('selecionado', i === index);
+  });
+  horarioSelecionado = null;
+  atualizarHorarios();
+  atualizarBotaoConfirmar();
+}
+
+inputData.addEventListener('change', atualizarHorarios);
+
+async function atualizarHorarios() {
+  if (!servicoSelecionado || !inputData.value) {
+    horariosContainer.innerHTML = '<p style="color:#6B5A61; font-size:13.5px;">Selecione um procedimento e um dia para ver os horários livres.</p>';
+    return;
+  }
+
+  horariosContainer.innerHTML = '<p style="color:#6B5A61; font-size:13.5px;">Buscando horários livres...</p>';
+
+  try {
+    const resp = await chamarApi('getHorariosDisponiveis', {
+      data: inputData.value,
+      duracaoMin: servicoSelecionado.duracaoMin
+    });
+    if (!resp.ok) throw new Error(resp.erro);
+
+    if (resp.horarios.length === 0) {
+      horariosContainer.innerHTML = '<p style="color:#6B5A61; font-size:13.5px;">Não há horários livres nesse dia. Tente outra data.</p>';
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'horarios-grid';
+    resp.horarios.forEach(h => {
+      const chip = document.createElement('button');
+      chip.className = 'horario-chip';
+      chip.type = 'button';
+      chip.textContent = h;
+      chip.addEventListener('click', () => {
+        horarioSelecionado = h;
+        document.querySelectorAll('.horario-chip').forEach(c => c.classList.remove('selecionado'));
+        chip.classList.add('selecionado');
+        atualizarBotaoConfirmar();
+      });
+      grid.appendChild(chip);
+    });
+    horariosContainer.innerHTML = '';
+    horariosContainer.appendChild(grid);
+  } catch (err) {
+    horariosContainer.innerHTML = '<p style="color:#B85C5C; font-size:13.5px;">Erro ao buscar horários.</p>';
+  }
+}
+
+function atualizarBotaoConfirmar() {
+  btnConfirmar.disabled = !(servicoSelecionado && inputData.value && horarioSelecionado);
+}
+
+document.getElementById('inputNome').addEventListener('input', atualizarBotaoConfirmar);
+document.getElementById('inputTelefone').addEventListener('input', atualizarBotaoConfirmar);
+
+btnConfirmar.addEventListener('click', async () => {
+  const nome = document.getElementById('inputNome').value.trim();
+  const telefone = document.getElementById('inputTelefone').value.trim();
+  const observacoes = document.getElementById('inputObs').value.trim();
+
+  if (!nome || !telefone) {
+    mostrarMensagem('Preencha seu nome e WhatsApp para confirmar.', 'erro');
+    return;
+  }
+
+  btnConfirmar.disabled = true;
+  btnConfirmar.textContent = 'Enviando...';
+
+  try {
+    const resp = await chamarApi('criarAgendamento', {
+      nome,
+      telefone,
+      servico: servicoSelecionado.nome,
+      data: inputData.value,
+      horario: horarioSelecionado,
+      valor: servicoSelecionado.valor,
+      observacoes
+    });
+
+    if (!resp.ok) {
+      mostrarMensagem(resp.erro || 'Não foi possível concluir o agendamento.', 'erro');
+      btnConfirmar.disabled = false;
+      btnConfirmar.textContent = 'Confirmar agendamento';
+      atualizarHorarios();
+      return;
+    }
+
+    mostrarMensagem('Agendamento enviado! Você receberá a confirmação pelo WhatsApp em breve.', 'sucesso');
+    btnConfirmar.textContent = 'Agendado ✓';
+  } catch (err) {
+    mostrarMensagem('Erro de conexão. Tente novamente em instantes.', 'erro');
+    btnConfirmar.disabled = false;
+    btnConfirmar.textContent = 'Confirmar agendamento';
+  }
+});
+
+function mostrarMensagem(texto, tipo) {
+  mensagemDiv.innerHTML = `<div class="msg ${tipo}">${texto}</div>`;
+}
+
+// ============================================================
+// TELA DA PROFISSIONAL
+// ============================================================
+
+let pinAtual = '';
+let todosAgendamentos = [];
+let filtroStatus = 'Todos';
+let agendamentoAberto = null;
+
+const telaPin = document.getElementById('telaPin');
+const painel = document.getElementById('painel');
+const inputPin = document.getElementById('inputPin');
+const btnEntrar = document.getElementById('btnEntrar');
+const mensagemPin = document.getElementById('mensagemPin');
+const filtroData = document.getElementById('filtroData');
+const listaAgendamentos = document.getElementById('listaAgendamentos');
+const resumoDia = document.getElementById('resumoDia');
+const modalFundo = document.getElementById('modalFundo');
+const modalConteudo = document.getElementById('modalConteudo');
+
+function iniciarAgenda() {
+  agendaIniciada = true;
+  const pinSalvo = sessionStorage.getItem('agendaPin');
+  if (pinSalvo) {
+    pinAtual = pinSalvo;
+    entrarNoPainel();
+  }
+}
+
+btnEntrar.addEventListener('click', validarPinDigitado);
+inputPin.addEventListener('keydown', e => { if (e.key === 'Enter') validarPinDigitado(); });
+
+async function validarPinDigitado() {
+  const pin = inputPin.value.trim();
+  if (!pin) return;
+  btnEntrar.disabled = true;
+  btnEntrar.textContent = 'Verificando...';
+
+  try {
+    const resp = await chamarApi('validarPin', { pin });
+    if (resp.ok && resp.valido) {
+      pinAtual = pin;
+      sessionStorage.setItem('agendaPin', pin);
+      entrarNoPainel();
+    } else {
+      mensagemPin.innerHTML = '<div class="msg erro">PIN incorreto.</div>';
+    }
+  } catch (err) {
+    mensagemPin.innerHTML = '<div class="msg erro">Erro de conexão.</div>';
+  } finally {
+    btnEntrar.disabled = false;
+    btnEntrar.textContent = 'Entrar';
+  }
+}
+
+function entrarNoPainel() {
+  telaPin.classList.add('oculto');
+  painel.classList.remove('oculto');
+  const hoje = new Date().toISOString().split('T')[0];
+  filtroData.value = hoje;
+  carregarAgendamentos();
+}
+
+filtroData.addEventListener('change', renderizarLista);
+
+document.querySelectorAll('[data-filtro]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    filtroStatus = btn.dataset.filtro;
+    document.querySelectorAll('[data-filtro]').forEach(b => b.style.background = 'transparent');
+    btn.style.background = '#F1D4DE';
+    renderizarLista();
+  });
+});
+
+async function carregarAgendamentos() {
+  listaAgendamentos.innerHTML = '<p style="color:#6B5A61; font-size:13.5px;">Carregando agenda...</p>';
+  try {
+    const resp = await chamarApi('getAgendamentos', { pin: pinAtual });
+    if (!resp.ok) throw new Error(resp.erro);
+    todosAgendamentos = resp.agendamentos;
+    renderizarLista();
+  } catch (err) {
+    listaAgendamentos.innerHTML = '<p style="color:#B85C5C; font-size:13.5px;">Erro ao carregar a agenda.</p>';
+  }
+}
+
+function renderizarLista() {
+  const dataFiltro = filtroData.value;
+  let filtrados = todosAgendamentos.filter(a => a.data === dataFiltro);
+  if (filtroStatus !== 'Todos') {
+    filtrados = filtrados.filter(a => a.status === filtroStatus);
+  }
+  filtrados.sort((a, b) => a.horario.localeCompare(b.horario));
+
+  renderizarResumo(filtrados);
+
+  if (filtrados.length === 0) {
+    listaAgendamentos.innerHTML = `
+      <div class="vazio">
+        <div class="display">Nada por aqui</div>
+        <p>Nenhum agendamento para este dia com esse filtro.</p>
+      </div>`;
+    return;
+  }
+
+  listaAgendamentos.innerHTML = '';
+  filtrados.forEach(a => {
+    const cor = corDoStatus(a.status);
+    const item = document.createElement('div');
+    item.className = 'item-agendamento';
+    item.innerHTML = `
+      <div class="item-tarja" style="background:${cor}"></div>
+      <div class="item-horario">${a.horario}</div>
+      <div class="item-principal">
+        <strong>${a.nome}</strong>
+        <span>${a.servico} · R$ ${Number(a.valor).toFixed(2)}</span>
+      </div>
+      <div class="status-badge status-${a.status}">${a.status}</div>
+    `;
+    item.addEventListener('click', () => abrirModal(a));
+    listaAgendamentos.appendChild(item);
+  });
+}
+
+function corDoStatus(status) {
+  if (status === 'Confirmado') return '#6B8F71';
+  if (status === 'Cancelado') return '#B85C5C';
+  if (status === 'Concluído') return '#4A2439';
+  return '#C98A2E';
+}
+
+function renderizarResumo(lista) {
+  const total = lista.length;
+  const confirmados = lista.filter(a => a.status === 'Confirmado').length;
+  const faturamento = lista
+    .filter(a => a.status !== 'Cancelado')
+    .reduce((soma, a) => soma + Number(a.valor || 0), 0);
+
+  resumoDia.innerHTML = `
+    <div class="resumo-item">
+      <div class="valor-grande">${total}</div>
+      <div class="rotulo">Atendimentos</div>
+    </div>
+    <div class="resumo-item">
+      <div class="valor-grande">${confirmados}</div>
+      <div class="rotulo">Confirmados</div>
+    </div>
+    <div class="resumo-item">
+      <div class="valor-grande">R$ ${faturamento.toFixed(2)}</div>
+      <div class="rotulo">Previsto no dia</div>
+    </div>
+  `;
+}
+
+function abrirModal(agendamento) {
+  agendamentoAberto = agendamento;
+  const telefoneLimpo = (agendamento.telefone || '').replace(/\D/g, '');
+  const mensagemWhats = encodeURIComponent(
+    `Olá, ${agendamento.nome}! Aqui é do salão. Confirmando seu horário de ${agendamento.servico} no dia ${formatarDataBR(agendamento.data)} às ${agendamento.horario}. Pode confirmar? 💅`
+  );
+
+  modalConteudo.innerHTML = `
+    <div class="modal-linha"><span>Cliente</span><span>${agendamento.nome}</span></div>
+    <div class="modal-linha"><span>Telefone</span><span>${agendamento.telefone}</span></div>
+    <div class="modal-linha"><span>Procedimento</span><span>${agendamento.servico}</span></div>
+    <div class="modal-linha"><span>Data</span><span>${formatarDataBR(agendamento.data)}</span></div>
+    <div class="modal-linha"><span>Horário</span><span>${agendamento.horario}</span></div>
+    <div class="modal-linha"><span>Valor</span><span>R$ ${Number(agendamento.valor).toFixed(2)}</span></div>
+    <div class="modal-linha"><span>Observações</span><span>${agendamento.observacoes || '—'}</span></div>
+
+    <div class="modal-acoes">
+      <a class="btn-whatsapp" target="_blank" href="https://wa.me/55${telefoneLimpo}?text=${mensagemWhats}">
+        Entrar em contato para confirmar
+      </a>
+      <button class="btn-status ${agendamento.status === 'Confirmado' ? 'ativo' : ''}" data-status="Confirmado">Confirmar</button>
+      <button class="btn-status ${agendamento.status === 'Concluído' ? 'ativo' : ''}" data-status="Concluído">Concluído</button>
+      <button class="btn-status ${agendamento.status === 'Cancelado' ? 'ativo' : ''}" data-status="Cancelado">Cancelar</button>
+    </div>
+    <button class="btn-excluir" id="btnExcluir">Excluir agendamento</button>
+  `;
+
+  modalConteudo.querySelectorAll('[data-status]').forEach(btn => {
+    btn.addEventListener('click', () => mudarStatus(btn.dataset.status));
+  });
+  document.getElementById('btnExcluir').addEventListener('click', excluirAtual);
+
+  modalFundo.classList.remove('oculto');
+}
+
+function formatarDataBR(dataStr) {
+  const [ano, mes, dia] = dataStr.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
+
+document.getElementById('btnFecharModal').addEventListener('click', () => {
+  modalFundo.classList.add('oculto');
+});
+modalFundo.addEventListener('click', e => {
+  if (e.target === modalFundo) modalFundo.classList.add('oculto');
+});
+
+async function mudarStatus(novoStatus) {
+  try {
+    const resp = await chamarApi('atualizarStatus', { id: agendamentoAberto.id, status: novoStatus, pin: pinAtual });
+    if (!resp.ok) throw new Error(resp.erro);
+    agendamentoAberto.status = novoStatus;
+    modalFundo.classList.add('oculto');
+    carregarAgendamentos();
+  } catch (err) {
+    alert('Erro ao atualizar status: ' + err.message);
+  }
+}
+
+async function excluirAtual() {
+  if (!confirm('Excluir este agendamento definitivamente?')) return;
+  try {
+    const resp = await chamarApi('excluirAgendamento', { id: agendamentoAberto.id, pin: pinAtual });
+    if (!resp.ok) throw new Error(resp.erro);
+    modalFundo.classList.add('oculto');
+    carregarAgendamentos();
+  } catch (err) {
+    alert('Erro ao excluir: ' + err.message);
+  }
+}
+
+// ------------------------------------------------------------
+// Início
+// ------------------------------------------------------------
+roteirizar();
+</script>
+</body>
+</html>
