@@ -328,7 +328,7 @@ input[type="date"] {
 // Precisa ser A MESMA URL usada no index.html — é assim que os
 // dois arquivos "conversam": ambos leem/escrevem na mesma planilha.
 // ============================================================
-const API_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwN7eT1uhvJbyvLmDvI1WPkX2GMX3wI6_qfVt2BTMjfkT3cBI4M3rLOLalo1atJ1O_I/exec';
 
 async function chamarApi(action, params = {}) {
   const body = JSON.stringify({ action, ...params });
