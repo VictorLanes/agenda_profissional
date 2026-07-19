@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Agenda — Painel Administrativo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --plum: #4A2439;
+  --plum-dark: #341828;
+  --blush: #F1D4DE;
+  --blush-light: #FBF1F4;
+  --ivory: #FBF6F4;
+  --gold: #C9A15A;
+  --charcoal: #2E2024;
+  --charcoal-soft: #6B5A61;
+  --ok: #6B8F71;
+  --warn: #C98A2E;
+  --danger: #B85C5C;
+  --line: #E6D9DD;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(74, 36, 57, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-family: 'Work Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--plum);
+  margin: 0;
+}
+
+a { color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+.oculto { display: none !important; }
+
+/* ---------- Topo ---------- */
+
+.topo {
+  background: linear-gradient(135deg, var(--plum) 0%, var(--plum-dark) 100%);
+  color: var(--blush-light);
+  padding: 36px 0 46px;
+  position: relative;
+  overflow: hidden;
+}
+
+.topo::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  top: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,161,90,0.35) 0%, rgba(201,161,90,0) 70%);
+}
+
+.topo-eyebrow { text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px; color: var(--gold); font-weight: 600; }
+.topo h1 { color: #fff; font-size: 34px; margin-top: 6px; }
+.topo p { color: var(--blush); margin-top: 8px; max-width: 480px; line-height: 1.5; }
+
+.topo-link {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 12.5px;
+  color: var(--blush);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+.topo-link:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ---------- Cartão ---------- */
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  padding: 28px;
+}
+
+label { display: block; font-size: 13px; font-weight: 600; color: var(--plum); margin-bottom: 6px; }
+.campo { margin-bottom: 18px; }
+
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font-size: 14.5px;
+  background: var(--blush-light);
+  color: var(--charcoal);
+  font-family: inherit;
+}
+
+.btn-primario {
+  background: var(--plum);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  transition: background 0.15s ease;
+}
+
+.btn-primario:hover { background: var(--plum-dark); }
+.btn-primario:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secundario {
+  background: transparent;
+  color: var(--plum);
+  border: 1.5px solid var(--plum);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.msg { margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; }
+.msg.sucesso { background: #E9F1E9; color: var(--ok); }
+.msg.erro { background: #F6E6E6; color: var(--danger); }
+
+/* ---------- Agenda ---------- */
+
+.agenda-topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.filtros { display: flex; gap: 10px; flex-wrap: wrap; }
+.resumo-dia { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+
+.resumo-item {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 18px;
+  min-width: 120px;
+}
+
+.resumo-item .valor-grande { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--plum); }
+.resumo-item .rotulo { font-size: 12px; color: var(--charcoal-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.lista-agendamentos { display: flex; flex-direction: column; gap: 10px; }
+
+.item-agendamento {
+  display: grid;
+  grid-template-columns: 6px 70px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.item-agendamento:hover { box-shadow: var(--shadow); }
+.item-tarja { align-self: stretch; border-radius: 4px; }
+.item-horario { font-weight: 700; color: var(--plum); font-size: 15px; }
+.item-principal strong { display: block; font-size: 15px; }
+.item-principal span { font-size: 13px; color: var(--charcoal-soft); }
+
+.status-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.status-Pendente { background: #FBECD6; color: var(--warn); }
+.status-Confirmado { background: #E4EEE5; color: var(--ok); }
+.status-Cancelado { background: #F6E6E6; color: var(--danger); }
+.status-Concluído { background: #E6E1F0; color: var(--plum); }
+
+/* ---------- Modal ---------- */
+
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 32, 36, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal-caixa {
+  background: #fff;
+  border-radius: var(--radius);
+  max-width: 420px;
+  width: 100%;
+  padding: 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-linha { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; gap: 12px; }
+.modal-linha span:first-child { color: var(--charcoal-soft); flex-shrink: 0; }
+.modal-linha span:last-child { font-weight: 600; text-align: right; }
+
+.modal-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+.btn-status {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1.5px solid var(--line);
+  background: var(--blush-light);
+}
+
+.btn-status.ativo { border-color: var(--plum); color: var(--plum); }
+
+.btn-excluir {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fechar-modal {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: transparent;
+  font-size: 20px;
+  color: var(--charcoal-soft);
+}
+
+/* ---------- PIN ---------- */
+
+.tela-pin { max-width: 340px; margin: 80px auto; text-align: center; padding: 0 20px; }
+.vazio { text-align: center; padding: 40px 20px; color: var(--charcoal-soft); }
+.vazio .display { font-size: 20px; margin-bottom: 6px; }
+
+@media (max-width: 560px) {
+  .item-agendamento { grid-template-columns: 6px 1fr; grid-template-rows: auto auto; }
+  .item-horario { grid-column: 2; }
+  .status-badge { grid-column: 2; justify-self: start; margin-top: 4px; }
+}
+</style>
+</head>
+<body>
+
+<div id="telaPin" class="tela-pin">
+  <h1 style="font-size:24px; margin-bottom: 6px;">Minha Agenda</h1>
+  <p style="color:#6B5A61; font-size:13.5px; margin-bottom: 20px;">Digite seu PIN de acesso</p>
+  <input type="text" id="inputPin" inputmode="numeric" placeholder="PIN" style="text-align:center; letter-spacing: 0.3em; font-size:18px; margin-bottom: 12px;">
+  <button class="btn-primario" id="btnEntrar">Entrar</button>
+  <div id="mensagemPin"></div>
+  <p style="margin-top:18px;"><a href="index.html" style="font-size:12.5px; color:#6B5A61;">&larr; Ir para a página de agendamento da cliente</a></p>
+</div>
+
+<div id="painel" class="oculto">
+  <div class="topo">
+    <div class="container">
+      <a href="index.html" class="topo-link">Ver como cliente</a>
+      <div class="topo-eyebrow">Painel da profissional</div>
+      <h1>Minha Agenda</h1>
+      <p>Acompanhe, confirme e organize os atendimentos marcados pelas clientes.</p>
+    </div>
+  </div>
+
+  <div class="container" style="margin-top: -26px; padding-bottom: 60px;">
+    <div class="card">
+      <div class="agenda-topbar">
+        <div class="campo" style="margin-bottom:0;">
+          <label for="filtroData">Ver o dia</label>
+          <input type="date" id="filtroData">
+        </div>
+        <div class="filtros">
+          <button class="btn-secundario" data-filtro="Todos">Todos</button>
+          <button class="btn-secundario" data-filtro="Pendente">Pendentes</button>
+          <button class="btn-secundario" data-filtro="Confirmado">Confirmados</button>
+        </div>
+        <button class="btn-secundario" id="btnRelatorio" style="border-color:var(--gold); color:var(--gold);">Gerar relatório do dia</button>
+      </div>
+
+      <div class="resumo-dia" id="resumoDia"></div>
+      <div id="listaAgendamentos" class="lista-agendamentos"></div>
+    </div>
+  </div>
+</div>
+
+<div id="modalFundo" class="modal-fundo oculto">
+  <div class="modal-caixa">
+    <button class="fechar-modal" id="btnFecharModal">&times;</button>
+    <h3 style="font-size:19px; margin-bottom: 14px;">Detalhes do agendamento</h3>
+    <div id="modalConteudo"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ⚠️ COLE AQUI a URL do App da Web do Apps Script (Code.gs)
+// Precisa ser A MESMA URL usada no index.html — é assim que os
+// dois arquivos "conversam": ambos leem/escrevem na mesma planilha.
+// ============================================================
+const API_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+
+async function chamarApi(action, params = {}) {
+  const body = JSON.stringify({ action, ...params });
+  const resp = await fetch(API_URL, { method: 'POST', body });
+  return resp.json();
+}
+
+let pinAtual = '';
+let todosAgendamentos = [];
+let filtroStatus = 'Todos';
+let agendamentoAberto = null;
+
+const telaPin = document.getElementById('telaPin');
+const painel = document.getElementById('painel');
+const inputPin = document.getElementById('inputPin');
+const btnEntrar = document.getElementById('btnEntrar');
+const mensagemPin = document.getElementById('mensagemPin');
+const filtroData = document.getElementById('filtroData');
+const listaAgendamentos = document.getElementById('listaAgendamentos');
+const resumoDia = document.getElementById('resumoDia');
+const modalFundo = document.getElementById('modalFundo');
+const modalConteudo = document.getElementById('modalConteudo');
+
+// Mantém o PIN salvo neste navegador para não pedir toda vez
+const pinSalvo = sessionStorage.getItem('agendaPin');
+if (pinSalvo) {
+  pinAtual = pinSalvo;
+  entrarNoPainel();
+}
+
+btnEntrar.addEventListener('click', validarPinDigitado);
+inputPin.addEventListener('keydown', e => { if (e.key === 'Enter') validarPinDigitado(); });
+
+async function validarPinDigitado() {
+  const pin = inputPin.value.trim();
+  if (!pin) return;
+  btnEntrar.disabled = true;
+  btnEntrar.textContent = 'Verificando...';
+
+  try {
+    const resp = await chamarApi('validarPin', { pin });
+    if (resp.ok && resp.valido) {
+      pinAtual = pin;
+      sessionStorage.setItem('agendaPin', pin);
+      entrarNoPainel();
+    } else {
+      mensagemPin.innerHTML = '<div class="msg erro">PIN incorreto.</div>';
+    }
+  } catch (err) {
+    mensagemPin.innerHTML = '<div class="msg erro">Erro de conexão.</div>';
+  } finally {
+    btnEntrar.disabled = false;
+    btnEntrar.textContent = 'Entrar';
+  }
+}
+
+function entrarNoPainel() {
+  telaPin.classList.add('oculto');
+  painel.classList.remove('oculto');
+  const hoje = new Date().toISOString().split('T')[0];
+  filtroData.value = hoje;
+  carregarAgendamentos();
+}
+
+filtroData.addEventListener('change', renderizarLista);
+
+document.querySelectorAll('[data-filtro]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    filtroStatus = btn.dataset.filtro;
+    document.querySelectorAll('[data-filtro]').forEach(b => b.style.background = 'transparent');
+    btn.style.background = '#F1D4DE';
+    renderizarLista();
+  });
+});
+
+async function carregarAgendamentos() {
+  listaAgendamentos.innerHTML = '<p style="color:#6B5A61; font-size:13.5px;">Carregando agenda...</p>';
+  try {
+    const resp = await chamarApi('getAgendamentos', { pin: pinAtual });
+    if (!resp.ok) throw new Error(resp.erro);
+    todosAgendamentos = resp.agendamentos;
+    renderizarLista();
+  } catch (err) {
+    listaAgendamentos.innerHTML = '<p style="color:#B85C5C; font-size:13.5px;">Erro ao carregar a agenda.</p>';
+  }
+}
+
+function renderizarLista() {
+  const dataFiltro = filtroData.value;
+  let filtrados = todosAgendamentos.filter(a => a.data === dataFiltro);
+  if (filtroStatus !== 'Todos') {
+    filtrados = filtrados.filter(a => a.status === filtroStatus);
+  }
+  filtrados.sort((a, b) => a.horario.localeCompare(b.horario));
+
+  renderizarResumo(filtrados);
+
+  if (filtrados.length === 0) {
+    listaAgendamentos.innerHTML = `
+      <div class="vazio">
+        <div class="display">Nada por aqui</div>
+        <p>Nenhum agendamento para este dia com esse filtro.</p>
+      </div>`;
+    return;
+  }
+
+  listaAgendamentos.innerHTML = '';
+  filtrados.forEach(a => {
+    const cor = corDoStatus(a.status);
+    const item = document.createElement('div');
+    item.className = 'item-agendamento';
+    item.innerHTML = `
+      <div class="item-tarja" style="background:${cor}"></div>
+      <div class="item-horario">${a.horario}</div>
+      <div class="item-principal">
+        <strong>${a.nome}</strong>
+        <span>${a.servico} · R$ ${Number(a.valor).toFixed(2)}</span>
+      </div>
+      <div class="status-badge status-${a.status}">${a.status}</div>
+    `;
+    item.addEventListener('click', () => abrirModal(a));
+    listaAgendamentos.appendChild(item);
+  });
+}
+
+function corDoStatus(status) {
+  if (status === 'Confirmado') return '#6B8F71';
+  if (status === 'Cancelado') return '#B85C5C';
+  if (status === 'Concluído') return '#4A2439';
+  return '#C98A2E';
+}
+
+function renderizarResumo(lista) {
+  const total = lista.length;
+  const confirmados = lista.filter(a => a.status === 'Confirmado').length;
+  const faturamento = lista
+    .filter(a => a.status !== 'Cancelado')
+    .reduce((soma, a) => soma + Number(a.valor || 0), 0);
+
+  resumoDia.innerHTML = `
+    <div class="resumo-item">
+      <div class="valor-grande">${total}</div>
+      <div class="rotulo">Atendimentos</div>
+    </div>
+    <div class="resumo-item">
+      <div class="valor-grande">${confirmados}</div>
+      <div class="rotulo">Confirmados</div>
+    </div>
+    <div class="resumo-item">
+      <div class="valor-grande">R$ ${faturamento.toFixed(2)}</div>
+      <div class="rotulo">Previsto no dia</div>
+    </div>
+  `;
+}
+
+// ---------- Relatório de atendimento do dia ----------
+
+document.getElementById('btnRelatorio').addEventListener('click', gerarRelatorioDoDia);
+
+function gerarRelatorioDoDia() {
+  const dataRelatorio = filtroData.value;
+  const doDia = todosAgendamentos
+    .filter(a => a.data === dataRelatorio)
+    .sort((a, b) => a.horario.localeCompare(b.horario));
+
+  if (doDia.length === 0) {
+    alert('Não há agendamentos nesse dia para gerar relatório.');
+    return;
+  }
+
+  const faturamento = doDia
+    .filter(a => a.status !== 'Cancelado')
+    .reduce((soma, a) => soma + Number(a.valor || 0), 0);
+
+  const linhas = doDia.map(a => `
+    <tr>
+      <td>${a.horario}</td>
+      <td>${a.nome}</td>
+      <td>${a.telefone}</td>
+      <td>${a.servico}</td>
+      <td>R$ ${Number(a.valor).toFixed(2)}</td>
+      <td>${a.status}</td>
+    </tr>
+  `).join('');
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <title>Relatório do dia ${formatarDataBR(dataRelatorio)}</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 32px; color: #2E2024; }
+        h1 { font-family: Georgia, serif; color: #4A2439; font-size: 22px; margin-bottom: 4px; }
+        p.sub { color: #6B5A61; margin-top: 0; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #E6D9DD; font-size: 13px; }
+        th { background: #4A2439; color: #fff; }
+        tfoot td { font-weight: 700; border-top: 2px solid #4A2439; border-bottom: none; }
+        .btn-imprimir { padding:10px 16px; border:none; background:#4A2439; color:#fff; border-radius:8px; cursor:pointer; margin-bottom:14px; font-size:13.5px; }
+        @media print { .btn-imprimir { display: none; } }
+      </style>
+    </head>
+    <body>
+      <h1>Relatório de atendimentos — ${formatarDataBR(dataRelatorio)}</h1>
+      <p class="sub">${doDia.length} agendamento(s) no dia</p>
+      <button class="btn-imprimir" onclick="window.print()">Imprimir / salvar em PDF</button>
+      <table>
+        <thead>
+          <tr><th>Horário</th><th>Cliente</th><th>Telefone</th><th>Procedimento</th><th>Valor</th><th>Status</th></tr>
+        </thead>
+        <tbody>${linhas}</tbody>
+        <tfoot>
+          <tr><td colspan="4">Total previsto (exclui cancelados)</td><td colspan="2">R$ ${faturamento.toFixed(2)}</td></tr>
+        </tfoot>
+      </table>
+    </body>
+    </html>
+  `;
+
+  const janela = window.open('', '_blank');
+  if (!janela) {
+    alert('O navegador bloqueou a abertura do relatório. Permita pop-ups para este site e tente de novo.');
+    return;
+  }
+  janela.document.write(html);
+  janela.document.close();
+}
+
+function abrirModal(agendamento) {
+  agendamentoAberto = agendamento;
+
+  modalConteudo.innerHTML = `
+    <div class="modal-linha"><span>Cliente</span><span>${agendamento.nome}</span></div>
+    <div class="modal-linha"><span>Telefone</span><span>${agendamento.telefone}</span></div>
+    <div class="modal-linha"><span>Procedimento</span><span>${agendamento.servico}</span></div>
+    <div class="modal-linha"><span>Data</span><span>${formatarDataBR(agendamento.data)}</span></div>
+    <div class="modal-linha"><span>Horário</span><span>${agendamento.horario}</span></div>
+    <div class="modal-linha"><span>Valor</span><span>R$ ${Number(agendamento.valor).toFixed(2)}</span></div>
+    <div class="modal-linha"><span>Observações</span><span>${agendamento.observacoes || '—'}</span></div>
+
+    <div class="modal-acoes">
+      <button class="btn-status ${agendamento.status === 'Confirmado' ? 'ativo' : ''}" data-status="Confirmado">Confirmar</button>
+      <button class="btn-status ${agendamento.status === 'Concluído' ? 'ativo' : ''}" data-status="Concluído">Concluído (libera horário)</button>
+      <button class="btn-status ${agendamento.status === 'Cancelado' ? 'ativo' : ''}" data-status="Cancelado">Cancelar (libera horário)</button>
+    </div>
+    <button class="btn-excluir" id="btnExcluir">Excluir agendamento</button>
+  `;
+
+  modalConteudo.querySelectorAll('[data-status]').forEach(btn => {
+    btn.addEventListener('click', () => mudarStatus(btn.dataset.status));
+  });
+  document.getElementById('btnExcluir').addEventListener('click', excluirAtual);
+
+  modalFundo.classList.remove('oculto');
+}
+
+function formatarDataBR(dataStr) {
+  const [ano, mes, dia] = dataStr.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
+
+document.getElementById('btnFecharModal').addEventListener('click', () => {
+  modalFundo.classList.add('oculto');
+});
+modalFundo.addEventListener('click', e => {
+  if (e.target === modalFundo) modalFundo.classList.add('oculto');
+});
+
+async function mudarStatus(novoStatus) {
+  try {
+    const resp = await chamarApi('atualizarStatus', { id: agendamentoAberto.id, status: novoStatus, pin: pinAtual });
+    if (!resp.ok) throw new Error(resp.erro);
+    agendamentoAberto.status = novoStatus;
+    modalFundo.classList.add('oculto');
+    carregarAgendamentos();
+  } catch (err) {
+    alert('Erro ao atualizar status: ' + err.message);
+  }
+}
+
+async function excluirAtual() {
+  if (!confirm('Excluir este agendamento definitivamente?')) return;
+  try {
+    const resp = await chamarApi('excluirAgendamento', { id: agendamentoAberto.id, pin: pinAtual });
+    if (!resp.ok) throw new Error(resp.erro);
+    modalFundo.classList.add('oculto');
+    carregarAgendamentos();
+  } catch (err) {
+    alert('Erro ao excluir: ' + err.message);
+  }
+}
+</script>
+</body>
+</html>
