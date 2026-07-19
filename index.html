@@ -566,7 +566,7 @@ textarea { resize: vertical; min-height: 70px; }
 // ============================================================
 // ⚠️ COLE AQUI a URL do seu App da Web publicado no Google Apps Script
 // ============================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbzx7M8aKN-dMMCm24dcj8bWbNPu9vrgRW2hC_pAYnqTExWxbGjlB97gzlbp8wwjrqvc/exec';
+const API_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
 
 async function chamarApi(action, params = {}) {
   const body = JSON.stringify({ action, ...params });
@@ -919,9 +919,6 @@ function renderizarResumo(lista) {
 function abrirModal(agendamento) {
   agendamentoAberto = agendamento;
   const telefoneLimpo = (agendamento.telefone || '').replace(/\D/g, '');
-  const mensagemWhats = encodeURIComponent(
-    `Olá, ${agendamento.nome}! Aqui é do salão. Confirmando seu horário de ${agendamento.servico} no dia ${formatarDataBR(agendamento.data)} às ${agendamento.horario}. Pode confirmar? 💅`
-  );
 
   modalConteudo.innerHTML = `
     <div class="modal-linha"><span>Cliente</span><span>${agendamento.nome}</span></div>
@@ -933,8 +930,8 @@ function abrirModal(agendamento) {
     <div class="modal-linha"><span>Observações</span><span>${agendamento.observacoes || '—'}</span></div>
 
     <div class="modal-acoes">
-      <a class="btn-whatsapp" target="_blank" href="https://wa.me/55${telefoneLimpo}?text=${mensagemWhats}">
-        Entrar em contato para confirmar
+      <a class="btn-whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${telefoneLimpo}">
+        Abrir WhatsApp da cliente
       </a>
       <button class="btn-status ${agendamento.status === 'Confirmado' ? 'ativo' : ''}" data-status="Confirmado">Confirmar</button>
       <button class="btn-status ${agendamento.status === 'Concluído' ? 'ativo' : ''}" data-status="Concluído">Concluído</button>
